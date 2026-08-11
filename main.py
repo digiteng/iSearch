@@ -62,7 +62,7 @@ def search(user: str, x_api_key: str = Header(None)):
                 video_info = {
                     "id": node.get("id"),
                     "shortcode_id": node.get("shortcode"),
-                    "url": f"https://instagram.com{node.get('shortcode')}/",
+                    "url": f"https://instagram.com/p/{node.get('shortcode')}/",
                     "video_url": node.get("video_url"), 
                     "view_count": node.get("video_view_count", 0),
                     "liked": node.get("edge_liked_by", {}).get("count", 0),
