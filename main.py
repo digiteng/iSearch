@@ -19,9 +19,7 @@ def search(user: str, x_api_key: str = Header(None)):
     mac_x = os.getenv("MAC_0", "")
     insta_url = os.getenv("INSTA_URL", "")
 
-    valid_passwords = [pasw.strip() for pasw in mac_x.split(",") if sifre.strip()]
-
-    if not x_api_key or x_api_key not in valid_passwords:
+    if not x_api_key or x_api_key not in mac_x:
         raise HTTPException(status_code=401, detail="Unauthorized access! Invalid API token.")
         
     if not user:
