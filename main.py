@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 import niquests
+import uvicorn
 INSTAGRAM_COOKIE = os.getenv("INSTAGRAM_COOKIE", "")
 
 app = FastAPI()
