@@ -4,8 +4,6 @@ import niquests
 
 app = FastAPI()
 
-MAC_X = os.getenv("MAC_0", "")
-INSTA_URL = os.getenv("INSTA_URL", "")
 HEADERS = {
     'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Instagram 105.0.0.11.118 (iPhone11,8; iOS 12_3_1; en_US; en-US; scale=2.00; 828x1792; 165586599)',
     'x-ig-app-id': '936619743392459',
@@ -13,23 +11,33 @@ HEADERS = {
 
 @app.get("/")
 def read_root():
-    return {"status": " is working!"}
+    return {"status": "FastAPI on Vercel is working!"}
 
 @app.get("/search")
 def search(user: str, x_api_key: str = Header(None)):
-    if not x_api_key or x_api_key != MAC_X:
+
+    mac_x = os.getenv("MAC_0", "")
+    insta_url = os.getenv("INSTA_URL", "")
+
+    if not x_api_key or x_api_key != mac_x:
         raise HTTPException(status_code=401, detail="Unauthorized access! Invalid API token.")
+        
     if not user:
         raise HTTPException(status_code=400, detail="No username was specified.")
-    url = f"{INSTA_URL}{user}"
+        
+    url = f"{insta_url}{user}"
+    
     try:
         r = niquests.get(url, headers=HEADERS)
         if r.status_code != 200:
             raise HTTPException(status_code=r.status_code, detail=f"Instagram API error: {r.status_code}")
+            
         instagram_data = r.json()
         user_info = instagram_data.get("data", {}).get("user", {})
+        
         if not user_info:
             return {"message": "User not found or profile is private."}
+            
         clean_profile = {
             "user_name": user_info.get("username"),
             "full_name": user_info.get("full_name"),
